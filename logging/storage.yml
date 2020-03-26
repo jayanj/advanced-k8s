@@ -1,3 +1,4 @@
+# For AWS
 kind: StorageClass
 apiVersion: storage.k8s.io/v1beta1
 metadata:
@@ -6,3 +7,26 @@ provisioner: kubernetes.io/aws-ebs
 parameters:
   type: gp2
   zone: eu-west-1a
+
+#For GCP (use either AWS or GCP only as per the requirement)
+# ssd-storageclass.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: faster
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+  
+# ssd-persistantvolumeclaim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-volume
+spec:
+  storageClassName: faster
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
